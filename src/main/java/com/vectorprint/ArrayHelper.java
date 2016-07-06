@@ -265,7 +265,8 @@ public class ArrayHelper {
     * @throws VectorPrintRuntimeException when one of the objects is not an array
     * @param o
     * @param p
-    * @return
+    * @return true when both objects are null or when they are arrays of Objects or primitives and the corresponding
+    * equals method in {@link Arrays} returns true.
     */
    public static boolean isArrayEqual(Object o, Object p) {
       if (o != null) {
