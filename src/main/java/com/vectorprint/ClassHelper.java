@@ -170,13 +170,13 @@ public class ClassHelper {
    }
 
    /**
-    * find the runtime class for a class parameter. Calls {@link #findParameterClasses(java.lang.Class, java.lang.Class)
+    * find the runtime class for a class parameter when you know the declaring class. Calls {@link #findParameterClasses(java.lang.Class, java.lang.Class)
     * }
     *
-    * @param subclass the subclass of the generic class whose parameter class we want to know
-    * @param classWithParameter the parametrized class
-    * @param classWithParameter the class that contains the parameter whose class we are lokking for
-    * @return
+    * @param subclass the subclass of the parameterized class whose parameter class we want to know
+    * @param paramNum the index of the parameter on the parameterized class whose class we want to know
+    * @param classWithParameter the class that declares the parameter whose class we are looking for
+    * @return a class or null
     */
    public static <T> Class<?> findParameterClass(int paramNum, Class<? extends T> subclass, Class<T> classWithParameter) {
       return findParameterClasses(subclass, classWithParameter).get(paramNum);
@@ -187,8 +187,8 @@ public class ClassHelper {
     * parent classes to find the classes of the classWithParameters
     *
     *
-    * @param subclass the subclass of the generic class whose parameter classes we want to know
-    * @param classWithParameter the parametrized class
+    * @param subclass the subclass of the parameterized class whose parameter class we want to know
+    * @param classWithParameter the class that declares the parameter whose class we are looking for
     * @return a List of java class for the class parameters, or null
     */
    public static <T> List<Class<?>> findParameterClasses(Class<? extends T> subclass, Class<T> classWithParameter) {
