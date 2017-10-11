@@ -124,6 +124,7 @@ public class CommonTest {
       Assert.assertEquals(Long.class, ClassHelper.findParameterClasses(Level2Sub.class, GenericInterface.class).get(0));
       
       Assert.assertEquals(Long.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(0));
+      Assert.assertEquals(Long.class, ClassHelper.findParameterClass(0,Level3Sub.class, GenericInterface.class));
       Assert.assertEquals(Float.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(1));
       Assert.assertEquals(Integer.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(2));
    }
