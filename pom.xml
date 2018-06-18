@@ -32,8 +32,8 @@
    </ciManagement>
    <scm>
       <url>https://github.com/eduarddrenth/VectorPrintCommon</url>
-      <connection>scm:git:https://github.com/eduarddrenth/VectorPrintCommon</connection>
-      <developerConnection>scm:git:https://github.com/eduarddrenth/VectorPrintCommon</developerConnection>
+      <connection>scm:git:git@github.com:eduarddrenth/VectorPrintCommon.git</connection>
+      <developerConnection>scm:git:git@github.com:eduarddrenth/VectorPrintCommon.git</developerConnection>
      <tag>HEAD</tag>
   </scm>
    <issueManagement>
