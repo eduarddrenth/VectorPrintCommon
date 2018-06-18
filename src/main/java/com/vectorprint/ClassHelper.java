@@ -100,7 +100,7 @@ public class ClassHelper {
                if (filePath.indexOf("%20") > 0) {
                   filePath = filePath.replace("%20", " ");
                }
-               if ((filePath.indexOf("!") > 0) & (filePath.indexOf(".jar") > 0)) {
+               if ((filePath.indexOf('!') > 0) & (filePath.indexOf(".jar") > 0)) {
                   String jarPath = filePath.substring(0, filePath.indexOf('!'))
                       .substring(filePath.indexOf(':') + 1);
                   // WINDOWS HACK
@@ -303,23 +303,30 @@ public class ClassHelper {
       }
    }
 
-   public static <T> Constructor<T> findConstructor(Class<T> clazz, Class... parameters) {
-      for (Constructor con : clazz.getConstructors()) {
-         Class[] parameterTypes = con.getParameterTypes();
-         if (parameters.length != parameterTypes.length) {
-            continue;
-         }
-         boolean ok = true;
-         for (int i = 0; i < parameters.length; i++) {
-            if (!parameters[i].isAssignableFrom(parameterTypes[i])) {
-               ok = false;
-               break;
+   /**
+    * find the first declared constructor accepting certain parameters.
+    * @param <T>
+    * @param clazz
+    * @param parameters
+    * @return 
+    */
+    public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... parameters) {
+        for (Constructor<?> con : clazz.getDeclaredConstructors()) {
+            Class<?>[] parameterTypes = con.getParameterTypes();
+            if (parameters.length != parameterTypes.length) {
+                continue;
             }
-         }
-         if (ok) {
-            return con;
-         }
-      }
-      return null;
-   }
+            boolean ok = true;
+            for (int i = 0; i < parameters.length; i++) {
+                if (!parameters[i].isAssignableFrom(parameterTypes[i])) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (ok) {
+                return (Constructor<T>) con;
+            }
+        }
+        return null;
+    }
 }

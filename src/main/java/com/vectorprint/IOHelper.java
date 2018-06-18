@@ -36,8 +36,8 @@ public class IOHelper {
 
    /**
     *
-    * @param input will be wrapped in a BufferedInputStream
-    * @param output will be wrapped in a BufferedOutputStream
+    * @param input will be wrapped in a ReadableByteChannel
+    * @param output will be wrapped in a WritableByteChannel
     * @param bufferSize
     * @param close
     * @throws IOException

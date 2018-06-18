@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 /**
- * Class to print version information of all jars found on the classpath or in the manifest.
+ * Class to find version information of all jars found on the classpath or in the manifest.
  *
  * @author Eduard Drenth at VectorPrint.nl
  */
@@ -93,7 +93,7 @@ public class VersionInfo {
    }
 
    /**
-    * @return a Map of the maven version information for libraries found in the class path.
+    * @return a Map containing version information of libraries found on the class path.
     */
    public static Map<String, VersionInformation> getVersionInfo() throws IOException {
       String[] parts = System.getProperty("java.class.path").split(File.pathSeparator);

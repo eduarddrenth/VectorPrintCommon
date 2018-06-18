@@ -69,12 +69,13 @@ public class ThreadTester {
     */
    public static void testInThread(Collection<Runnable> toRun) throws AssertionError, RuntimeException, InterruptedException {
       Set<Runner> runners = new HashSet<>(toRun.size());
-      // start the threads
-      for (Runnable r : toRun) {
-         Runner ru = new Runner(r);
-         ru.start();
-         runners.add(ru);
-      }
+       // start the threads
+       toRun.stream().map((r) -> new Runner(r)).map((ru) -> {
+           ru.start();
+           return ru;
+       }).forEachOrdered((ru) -> {
+           runners.add(ru);
+       });
       // handle for the first failing thread
       Runner failed = null;
       for (Runner r : runners) {
@@ -107,7 +108,7 @@ public class ThreadTester {
 
       private RuntimeException failure = null;
       private AssertionError fail = null;
-      private Runnable myRunnable;
+      private final Runnable myRunnable;
 
       private Runner(Runnable toRun) {
          super();
