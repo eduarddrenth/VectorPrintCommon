@@ -93,7 +93,6 @@
                <licenseName>apache_v2</licenseName>
                <includes>
                   <include>**/*java</include>
-                  <include>**/*jj</include><!-- does not work -->
                </includes>
             </configuration>
          </plugin>

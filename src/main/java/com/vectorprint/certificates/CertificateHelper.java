@@ -6,6 +6,26 @@
 
 package com.vectorprint.certificates;
 
+/*-
+ * #%L
+ * VectorPrintCommon
+ * %%
+ * Copyright (C) 2011 - 2018 VectorPrint
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import com.vectorprint.ArrayHelper;
 import com.vectorprint.IOHelper;
 import java.io.ByteArrayInputStream;
@@ -51,9 +71,8 @@ public class CertificateHelper {
     */
    public static Certificate loadCertificate(InputStream in, String type) throws IOException, CertificateException {
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         IOHelper.load(in, out);
          Certificate cert = CertificateFactory.getInstance(type)
-             .generateCertificate(new ByteArrayInputStream(out.toByteArray()));
+             .generateCertificate(new ByteArrayInputStream(IOHelper.load(in, out).toByteArray()));
          return cert;
    }
 
@@ -67,8 +86,7 @@ public class CertificateHelper {
    public static KeyStore loadKeyStore(InputStream in, String keystoretype, char[] password) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
          KeyStore ks = KeyStore.getInstance(keystoretype);
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         IOHelper.load(in, out);
-         ks.load(new ByteArrayInputStream(out.toByteArray()), password);
+         ks.load(new ByteArrayInputStream(IOHelper.load(in, out).toByteArray()), password);
          ArrayHelper.clear(password);
          return ks;
    }
