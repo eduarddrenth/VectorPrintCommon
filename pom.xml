@@ -10,7 +10,7 @@
     <name>VectorPrintCommon</name>
 
     <url>https://github.com/eduarddrenth/VectorPrintCommon/wiki</url>
-    <description>Common, mainly helper classes for (VectorPrint) software, featuring finding class of generic parameters, thread testing, version information detection, ArrayHelper, CertificateHelper</description>
+    <description>Common, mainly helper classes, featuring finding class of generic parameters, thread testing, version information detection, ArrayHelper, CertificateHelper, StringConverter</description>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>

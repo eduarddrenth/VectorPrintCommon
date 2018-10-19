@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package com.vectorprint;
 
@@ -25,6 +21,7 @@ package com.vectorprint;
  * limitations under the License.
  * #L%
  */
+
 
 import com.vectorprint.certificates.CertificateHelper;
 import java.net.URL;

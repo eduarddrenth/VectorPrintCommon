@@ -1,15 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package com.vectorprint;
 
-/*
+/*-
  * #%L
- * VectorPrintCommon2.0
+ * VectorPrintCommon
  * %%
- * Copyright (C) 2012 - 2013 VectorPrint
+ * Copyright (C) 2011 - 2018 VectorPrint
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +21,7 @@ package com.vectorprint;
  * limitations under the License.
  * #L%
  */
+
 
 import com.vectorprint.testing.ThreadTester;
 import java.io.FileNotFoundException;

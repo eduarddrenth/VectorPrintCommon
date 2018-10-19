@@ -1,10 +1,10 @@
 package com.vectorprint;
 
-/*
+/*-
  * #%L
- * VectorPrintCommon2.0
+ * VectorPrintCommon
  * %%
- * Copyright (C) 2012 - 2013 VectorPrint
+ * Copyright (C) 2011 - 2018 VectorPrint
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.vectorprint;
  * limitations under the License.
  * #L%
  */
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
@@ -31,11 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
-/**
- * Class to find version information of all jars found on the classpath or in the manifest.
- *
- * @author Eduard Drenth at VectorPrint.nl
- */
 public class VersionInfo {
 
    private VersionInfo() {

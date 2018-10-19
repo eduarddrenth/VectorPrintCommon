@@ -1,13 +1,10 @@
 package com.vectorprint;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-/*
+/*-
  * #%L
- * VectorPrintCommon2.0
+ * VectorPrintCommon
  * %%
- * Copyright (C) 2012 - 2013 VectorPrint
+ * Copyright (C) 2011 - 2018 VectorPrint
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +19,10 @@ import java.io.PrintWriter;
  * limitations under the License.
  * #L%
  */
-/**
- * Checked Exception with printStacktrace methods that print the stacktrace of the deepest nested Exception found.
- *
- * @author Eduard Drenth at VectorPrint.nl
- */
+
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 public class VectorPrintException extends Exception {
 
    public VectorPrintException(Throwable cause) {
