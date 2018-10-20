@@ -44,7 +44,7 @@ public interface StringConverter<T> {
 
         @Override
         public Float convert(String val) {
-            return Float.parseFloat(val);
+            return Float.valueOf(val);
         }
     }
 
@@ -52,7 +52,7 @@ public interface StringConverter<T> {
 
         @Override
         public Long convert(String val) {
-            return Long.parseLong(val);
+            return Long.valueOf(val);
         }
     }
 
@@ -60,7 +60,7 @@ public interface StringConverter<T> {
 
         @Override
         public Double convert(String val) {
-            return Double.parseDouble(val);
+            return Double.valueOf(val);
         }
     }
 
@@ -68,7 +68,7 @@ public interface StringConverter<T> {
 
         @Override
         public Boolean convert(String val) {
-            return Boolean.parseBoolean(val);
+            return Boolean.valueOf(val);
         }
     }
 
@@ -150,7 +150,7 @@ public interface StringConverter<T> {
 
         @Override
         public Integer convert(String val) {
-            return Integer.parseInt(val);
+            return Integer.valueOf(val);
         }
     }
 
@@ -171,7 +171,7 @@ public interface StringConverter<T> {
 
         @Override
         public Short convert(String val) {
-            return Short.parseShort(val);
+            return Short.valueOf(val);
         }
     }
 
