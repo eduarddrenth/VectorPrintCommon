@@ -94,7 +94,6 @@
                     <additionalparam>-views</additionalparam>
                     <additionalparam>-all  -collapsible -inferdep -inferrel -inferreltype composed -hide (java.*) -collpackages java.util.*</additionalparam>
                     <useStandardDocletOptions>true</useStandardDocletOptions>-->
-                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
             </plugin>
             <plugin>
@@ -132,6 +131,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <doclint>none</doclint>
     </properties>
 
     <dependencies>

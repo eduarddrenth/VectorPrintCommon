@@ -24,6 +24,8 @@ package com.vectorprint;
 import java.awt.Color;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -61,6 +63,22 @@ public interface StringConverter<T> {
         @Override
         public Double convert(String val) {
             return Double.valueOf(val);
+        }
+    }
+
+    public static class BigDecimalParser implements StringConverter<BigDecimal> {
+
+        @Override
+        public BigDecimal convert(String val) {
+            return new BigDecimal(val);
+        }
+    }
+
+    public static class BigIntegerParser implements StringConverter<BigInteger> {
+
+        @Override
+        public BigInteger convert(String val) {
+            return new BigInteger(val);
         }
     }
 
@@ -212,6 +230,8 @@ public interface StringConverter<T> {
     public static final LongParser LONG_PARSER = new LongParser();
     public static final FloatParser FLOAT_PARSER = new FloatParser();
     public static final DoubleParser DOUBLE_PARSER = new DoubleParser();
+    public static final BigIntegerParser BIG_INTEGER_PARSER = new BigIntegerParser();
+    public static final BigDecimalParser BIG_DECIMAL_PARSER = new BigDecimalParser();
     public static final URLParser URL_PARSER = new URLParser();
     public static final FileParser FILE_PARSER = new FileParser();
     public static final ClassParser CLASS_PARSER = new ClassParser();
@@ -219,4 +239,41 @@ public interface StringConverter<T> {
     public static final ColorParser COLOR_PARSER = new ColorParser();
     public static final DateParser DATE_PARSER = new DateParser();
     public static final RegexParser REGEX_PARSER = new RegexParser();
+
+    public static StringConverter forClass(Class clazz) {
+        if (Integer.class.equals(clazz)) {
+            return INT_PARSER;
+        } else if (Character.class.equals(clazz)) {
+            return CHAR_PARSER;
+        } else if (Short.class.equals(clazz)) {
+            return SHORT_PARSER;
+        } else if (Byte.class.equals(clazz)) {
+            return BYTE_PARSER;
+        } else if (Long.class.equals(clazz)) {
+            return LONG_PARSER;
+        } else if (Float.class.equals(clazz)) {
+            return FLOAT_PARSER;
+        } else if (DoubleParser.class.equals(clazz)) {
+            return DOUBLE_PARSER;
+        } else if (BigIntegerParser.class.equals(clazz)) {
+            return BIG_INTEGER_PARSER;
+        } else if (BigDecimalParser.class.equals(clazz)) {
+            return BIG_DECIMAL_PARSER;
+        } else if (URL.class.equals(clazz)) {
+            return URL_PARSER;
+        } else if (File.class.equals(clazz)) {
+            return FILE_PARSER;
+        } else if (Class.class.equals(clazz)) {
+            return CLASS_PARSER;
+        } else if (Boolean.class.equals(clazz)) {
+            return BOOLEAN_PARSER;
+        } else if (Color.class.equals(clazz)) {
+            return COLOR_PARSER;
+        } else if (Date.class.equals(clazz)) {
+            return DATE_PARSER;
+        } else if (Pattern.class.equals(clazz)) {
+            return REGEX_PARSER;
+        }
+        throw new IllegalArgumentException(clazz + " not supported");
+    }
 }
