@@ -253,11 +253,11 @@ public interface StringConverter<T> {
             return LONG_PARSER;
         } else if (Float.class.equals(clazz)) {
             return FLOAT_PARSER;
-        } else if (DoubleParser.class.equals(clazz)) {
+        } else if (Double.class.equals(clazz)) {
             return DOUBLE_PARSER;
-        } else if (BigIntegerParser.class.equals(clazz)) {
+        } else if (BigInteger.class.equals(clazz)) {
             return BIG_INTEGER_PARSER;
-        } else if (BigDecimalParser.class.equals(clazz)) {
+        } else if (BigDecimal.class.equals(clazz)) {
             return BIG_DECIMAL_PARSER;
         } else if (URL.class.equals(clazz)) {
             return URL_PARSER;
