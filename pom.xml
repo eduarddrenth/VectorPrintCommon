@@ -4,7 +4,7 @@
 
     <groupId>com.vectorprint</groupId>
     <artifactId>VectorPrintCommon</artifactId>
-    <version>3.6-SNAPSHOT</version>
+    <version>4.0</version>
     <packaging>jar</packaging>
     <inceptionYear>2011</inceptionYear>
     <name>VectorPrintCommon</name>
@@ -34,7 +34,7 @@
         <url>https://github.com/eduarddrenth/VectorPrintCommon</url>
         <connection>scm:git:git@github.com:eduarddrenth/VectorPrintCommon.git</connection>
         <developerConnection>scm:git:git@github.com:eduarddrenth/VectorPrintCommon.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>VectorPrintCommon-4.0</tag>
     </scm>
     <issueManagement>
         <system>github</system>
