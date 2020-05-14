@@ -28,8 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.zip.ZipEntry;
 
 public class VersionInfo {
@@ -37,7 +38,7 @@ public class VersionInfo {
    private VersionInfo() {
    }
 
-   private static final Logger LOG = Logger.getLogger(VersionInfo.class.getName());
+   private static final Logger LOG = LoggerFactory.getLogger(VersionInfo.class.getName());
 
    /**
     * print versioninfo for jar files on the classpath, or, alternatively, from jar files provided in space seperated
@@ -65,7 +66,7 @@ public class VersionInfo {
 
       for (VersionInformation mi : getVersionInfo().values()) {
          String name = mi.artifactId.equals(mi.groupId) ? mi.artifactId : (mi.groupId + '/' + mi.artifactId);
-         LOG.log(Level.INFO, "Maven library {0} v{1} on {2}, size={3}", new Object[]{name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size)});
+         LOG.info("Maven library {0} v{1} on {2}, size={3}", new Object[]{name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size)});
       }
    }
 
@@ -95,7 +96,7 @@ public class VersionInfo {
       String[] parts = System.getProperty("java.class.path").split(File.pathSeparator);
       Map<String, VersionInformation> ret = getVersionInfo(parts);
       if (ret.isEmpty()) {
-         LOG.log(Level.WARNING, "Unable to find version info in class path= {0}", System.getProperty("java.class.path"));
+         LOG.warn("Unable to find version info in class path= {0}", System.getProperty("java.class.path"));
       } else if (parts.length == 1) {
          // perhaps started with -jar and classpath in manifest
          JarFile zipFile = new JarFile(parts[0]);
