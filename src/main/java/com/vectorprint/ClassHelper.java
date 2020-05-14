@@ -76,8 +76,8 @@ public class ClassHelper {
    }
 
    /**
-    * looks for classes in a package either in {@link #getFromDirectory(java.io.File, java.lang.String) directories} or
-    * in {@link #getFromJARFile(java.lang.String, java.lang.String) jars}.
+    * looks for classes in a package either in {@link #getFromDirectory(File, String, ClassLoader)}  or
+    * in {@link #getFromJARFile(String, String, ClassLoader)} .
     *
     * @param loader
     * @param packageName
@@ -214,7 +214,7 @@ public class ClassHelper {
                    * working this way finds the correct type, also when order of parameters changes in the hierarchy
                    */
                   if (t instanceof TypeVariable) {
-                     varsCurrent.put(pars[i++], (varsPrevious.containsKey(t)) ? varsPrevious.get(t) : null);
+                     varsCurrent.put(pars[i++], varsPrevious.getOrDefault(t, null));
                   } else {
                      varsCurrent.put(pars[i++], getClass(t));
                   }
