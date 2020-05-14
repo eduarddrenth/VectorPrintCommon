@@ -20,7 +20,6 @@ package com.vectorprint;
  * #L%
  */
 
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 

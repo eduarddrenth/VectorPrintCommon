@@ -24,14 +24,15 @@ package com.vectorprint;
 
 
 import com.vectorprint.testing.ThreadTester;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  *

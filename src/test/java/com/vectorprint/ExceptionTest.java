@@ -23,10 +23,11 @@ package com.vectorprint;
  */
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 /**
  *

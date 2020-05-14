@@ -20,7 +20,14 @@ package com.vectorprint;
  * #L%
  */
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
@@ -28,9 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.zip.ZipEntry;
 
 public class VersionInfo {
@@ -66,7 +70,7 @@ public class VersionInfo {
 
       for (VersionInformation mi : getVersionInfo().values()) {
          String name = mi.artifactId.equals(mi.groupId) ? mi.artifactId : (mi.groupId + '/' + mi.artifactId);
-         LOG.info("Maven library {0} v{1} on {2}, size={3}", new Object[]{name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size)});
+         LOG.info("Maven library {0} v{1} on {2}, size={3}", name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size));
       }
    }
 

@@ -21,7 +21,7 @@ package com.vectorprint;
  * #L%
  */
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -100,7 +100,7 @@ public interface StringConverter<T> {
             if (value.indexOf('#') == 0) {
                 return Color.decode(value);
             } else {
-                Field f = null;
+                Field f;
                 try {
                     // assume name
                     f = Color.class.getField(value);

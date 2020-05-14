@@ -66,7 +66,7 @@ public class IOHelper {
       try {
          int n;
 
-         while ((n = in.read(b)) > 0) {
+         while (in.read(b) > 0) {
             b.flip();
             out.write(b);
             b.compact();

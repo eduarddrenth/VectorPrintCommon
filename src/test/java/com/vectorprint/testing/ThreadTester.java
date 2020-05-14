@@ -21,10 +21,11 @@ package com.vectorprint.testing;
  * #L%
  */
 
+import junit.framework.AssertionFailedError;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import junit.framework.AssertionFailedError;
 
 /**
  * Class that supports doing assertion in a Thread. Just do
