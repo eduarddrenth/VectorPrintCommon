@@ -29,6 +29,7 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -216,6 +217,14 @@ public interface StringConverter<T> {
         }
     }
 
+    public static class LocalDateTimeParser implements StringConverter<LocalDateTime> {
+
+        @Override
+        public LocalDateTime convert(String val) {
+            return LocalDateTime.parse(val);
+        }
+    }
+
     public static class RegexParser implements StringConverter<Pattern> {
 
         @Override
@@ -238,6 +247,7 @@ public interface StringConverter<T> {
     public static final BooleanParser BOOLEAN_PARSER = new BooleanParser();
     public static final ColorParser COLOR_PARSER = new ColorParser();
     public static final DateParser DATE_PARSER = new DateParser();
+    public static final LocalDateTimeParser LOCAL_DATE_TIME_PARSER = new LocalDateTimeParser();
     public static final RegexParser REGEX_PARSER = new RegexParser();
 
     public static StringConverter forClass(Class clazz) {
@@ -271,6 +281,8 @@ public interface StringConverter<T> {
             return COLOR_PARSER;
         } else if (Date.class.equals(clazz)) {
             return DATE_PARSER;
+        } else if (LocalDateTime.class.equals(clazz)) {
+            return LOCAL_DATE_TIME_PARSER;
         } else if (Pattern.class.equals(clazz)) {
             return REGEX_PARSER;
         }
