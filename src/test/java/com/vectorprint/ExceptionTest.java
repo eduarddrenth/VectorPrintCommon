@@ -40,7 +40,6 @@ public class ExceptionTest {
       Exception deepest = new Exception();
       Exception nested = new Exception(deepest);
       Exception vpe = new VectorPrintException(nested);
-      Exception vpr = new VectorPrintRuntimeException(nested);
 
       ByteArrayOutputStream deep = new ByteArrayOutputStream();
       ByteArrayOutputStream wrapper = new ByteArrayOutputStream();

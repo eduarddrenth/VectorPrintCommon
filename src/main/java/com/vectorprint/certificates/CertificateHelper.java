@@ -69,9 +69,8 @@ public class CertificateHelper {
     */
    public static Certificate loadCertificate(InputStream in, String type) throws IOException, CertificateException {
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         Certificate cert = CertificateFactory.getInstance(type)
+         return CertificateFactory.getInstance(type)
              .generateCertificate(new ByteArrayInputStream(IOHelper.load(in, out).toByteArray()));
-         return cert;
    }
 
    /**

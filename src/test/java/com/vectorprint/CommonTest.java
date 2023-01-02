@@ -151,7 +151,7 @@ public class CommonTest {
             
    }
    
-   private class DirectSub<P1,P2> implements GenericInterface<P1, P2, Integer> {
+   private static class DirectSub<P1,P2> implements GenericInterface<P1, P2, Integer> {
       
    }
    // deliberately switch parameter position
