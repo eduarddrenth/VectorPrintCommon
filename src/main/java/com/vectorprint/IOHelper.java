@@ -64,8 +64,6 @@ public class IOHelper {
       WritableByteChannel out = Channels.newChannel(output);
       ByteBuffer b = ByteBuffer.allocate(bufferSize);
       try {
-         int n;
-
          while (in.read(b) > 0) {
             b.flip();
             out.write(b);
