@@ -24,8 +24,6 @@ package com.vectorprint;
 
 
 import com.vectorprint.testing.ThreadTester;
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,6 +31,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -43,25 +43,34 @@ public class CommonTest {
    @Test
    public void testFind() throws IOException, FileNotFoundException, ClassNotFoundException {
       Collection<Class<?>> c = ClassHelper.fromPackage(ClassHelper.class.getPackage());
-      Assert.assertTrue(c.contains(ClassHelper.class));
-      Assert.assertTrue(c.contains(VectorPrintException.class));
-      Assert.assertTrue(c.contains(VectorPrintRuntimeException.class));
-      Assert.assertTrue(c.contains(VersionInfo.class));
-      Assert.assertTrue(c.contains(CommonTest.class));
+       Assertions.assertTrue(c.contains(ClassHelper.class));
+      Assertions.assertTrue(c.contains(VectorPrintException.class));
+      Assertions.assertTrue(c.contains(VectorPrintRuntimeException.class));
+      Assertions.assertTrue(c.contains(VersionInfo.class));
+      Assertions.assertTrue(c.contains(CommonTest.class));
       c = ClassHelper.getFromJARFile(
           "src/test/resources/VectorPrintCommon-2.0.jar",ClassHelper.class.getPackage().getName(), Thread.currentThread().getContextClassLoader());
-      Assert.assertTrue(c.contains(ClassHelper.class));
-      Assert.assertTrue(c.contains(VectorPrintException.class));
-      Assert.assertTrue(c.contains(VectorPrintRuntimeException.class));
-      Assert.assertTrue(c.contains(VersionInfo.class));
+      Assertions.assertTrue(c.contains(ClassHelper.class));
+      Assertions.assertTrue(c.contains(VectorPrintException.class));
+      Assertions.assertTrue(c.contains(VectorPrintRuntimeException.class));
+      Assertions.assertTrue(c.contains(VersionInfo.class));
    }
    
    @Test
    public void testVersionInfo() throws IOException {
       Map<String, VersionInfo.VersionInformation> info = VersionInfo.getVersionInfo();
-      Assert.assertTrue(info.size() > 0);
+      Assertions.assertTrue(info.size() > 0);
       VersionInfo.printVersionInfo();
       VersionInfo.main(null);
+   }
+   
+   @Test
+   public void testArrayHelper() {
+       Assertions.assertEquals(Float[].class, ArrayHelper.wrap(new float[] {1,2}).getClass());
+       Assertions.assertEquals(Boolean[].class, ArrayHelper.wrap(new boolean[] {true,false}).getClass());
+       Assertions.assertEquals(Integer[].class, ArrayHelper.wrap(new int[] {1,2}).getClass());
+       Assertions.assertEquals(Character[].class, ArrayHelper.wrap(new char[] {1,2}).getClass());
+       Assertions.assertEquals(Double[].class, ArrayHelper.wrap(new double[] {1,2}).getClass());
    }
    
    @Test
@@ -74,14 +83,14 @@ public class CommonTest {
       toRun.add(r2);
       try {
          ThreadTester.testInThread(toRun);
-         Assert.fail();
+         Assertions.fail();
       } catch (RuntimeException ex) {
          //expected
       }
       r.re = new RuntimeException("forced exception");
       try {
          ThreadTester.testInThread(r);
-         Assert.fail();
+         Assertions.fail();
       } catch (RuntimeException ex) {
          //expected
       }
@@ -99,7 +108,7 @@ public class CommonTest {
                   throw re;
                }
             } catch (IOException ex) {
-               Assert.fail(ex.getMessage());
+               Assertions.fail(ex.getMessage());
             }
          }
    }
@@ -110,22 +119,22 @@ public class CommonTest {
       GenericInterface l2 = new Level2Sub<>();
       GenericInterface l3 = new Level3Sub();
       
-      Assert.assertEquals(Integer.class,ClassHelper.findParameterClasses(l1.getClass(), GenericInterface.class).get(2));
+      Assertions.assertEquals(Integer.class,ClassHelper.findParameterClasses(l1.getClass(), GenericInterface.class).get(2));
       
       /*
        * we cannot resolve these (yet) because the actual class of these parameters are not known 
        * in the declaration of the classes, only on the instance
        */
-      Assert.assertEquals(null,ClassHelper.findParameterClasses(l1.getClass(), GenericInterface.class).get(0));
-      Assert.assertEquals(null,ClassHelper.findParameterClasses(l2.getClass(), GenericInterface.class).get(1));
+      Assertions.assertEquals(null,ClassHelper.findParameterClasses(l1.getClass(), GenericInterface.class).get(0));
+      Assertions.assertEquals(null,ClassHelper.findParameterClasses(l2.getClass(), GenericInterface.class).get(1));
 
-      Assert.assertEquals(Integer.class, ClassHelper.findParameterClasses(DirectSub.class, GenericInterface.class).get(2));
-      Assert.assertEquals(Long.class, ClassHelper.findParameterClasses(Level2Sub.class, GenericInterface.class).get(0));
+      Assertions.assertEquals(Integer.class, ClassHelper.findParameterClasses(DirectSub.class, GenericInterface.class).get(2));
+      Assertions.assertEquals(Long.class, ClassHelper.findParameterClasses(Level2Sub.class, GenericInterface.class).get(0));
       
-      Assert.assertEquals(Long.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(0));
-      Assert.assertEquals(Long.class, ClassHelper.findParameterClass(0,Level3Sub.class, GenericInterface.class));
-      Assert.assertEquals(Float.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(1));
-      Assert.assertEquals(Integer.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(2));
+      Assertions.assertEquals(Long.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(0));
+      Assertions.assertEquals(Long.class, ClassHelper.findParameterClass(0,Level3Sub.class, GenericInterface.class));
+      Assertions.assertEquals(Float.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(1));
+      Assertions.assertEquals(Integer.class, ClassHelper.findParameterClasses(Level3Sub.class, GenericInterface.class).get(2));
    }
    
    @Test
@@ -134,19 +143,19 @@ public class CommonTest {
       GenericInterface l2 = new Level2Sub();
       GenericInterface l3 = new Level3Sub();
       
-      Assert.assertEquals(Integer.class, ClassHelper.getClass(
+      Assertions.assertEquals(Integer.class, ClassHelper.getClass(
           ( (ParameterizedType) DirectSub.class.getGenericInterfaces()[0] )
           .getActualTypeArguments()[2]));
       
-      Assert.assertNull(ClassHelper.getClass(
+      Assertions.assertNull(ClassHelper.getClass(
           ( (ParameterizedType) DirectSub.class.getGenericInterfaces()[0] )
           .getActualTypeArguments()[1]));
 
-      Assert.assertEquals(Float[].class, ClassHelper.getClass(
+      Assertions.assertEquals(Float[].class, ClassHelper.getClass(
           ( (ParameterizedType) ArraySub.class.getGenericSuperclass() )
           .getActualTypeArguments()[0]));
 
-      Assert.assertEquals(Level2Sub.class, ClassHelper.getClass(
+      Assertions.assertEquals(Level2Sub.class, ClassHelper.getClass(
           ArraySub.class.getGenericSuperclass()));
             
    }

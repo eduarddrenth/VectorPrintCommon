@@ -20,10 +20,9 @@ package com.vectorprint;
  * #L%
  */
 
-import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import org.junit.jupiter.api.Test;
 
 public class StringConverterTest {
 

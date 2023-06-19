@@ -23,11 +23,11 @@ package com.vectorprint;
  */
 
 
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -55,7 +55,7 @@ public class ExceptionTest {
          deepest.printStackTrace(p);
          p.close();
          
-         Assert.assertEquals(deep.toString(),wrapper.toString());
+          Assertions.assertEquals(deep.toString(),wrapper.toString());
       }
 
    }
@@ -80,7 +80,7 @@ public class ExceptionTest {
          deepest.printStackTrace(p);
          p.close();
          
-         Assert.assertEquals(deep.toString(),wrapper.toString());
+         Assertions.assertEquals(deep.toString(),wrapper.toString());
       }
 
    }
