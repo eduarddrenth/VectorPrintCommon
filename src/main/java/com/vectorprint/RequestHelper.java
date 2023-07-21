@@ -83,7 +83,7 @@ public class RequestHelper {
      * @throws ExecutionException
      * @throws InterruptedException 
      */
-    protected String request(HttpRequest request, int timeoutSeconds) throws TimeoutException, ExecutionException, InterruptedException {
+    public String request(HttpRequest request, int timeoutSeconds) throws TimeoutException, ExecutionException, InterruptedException {
         List<String> r = request(timeoutSeconds, new HttpRequest[] {request});
         return r.isEmpty() ? "" : r.get(0);
     }
@@ -98,7 +98,7 @@ public class RequestHelper {
      * @throws ExecutionException
      * @throws InterruptedException 
      */
-    protected List<String> request(int timeoutSeconds, HttpRequest... requests) throws TimeoutException, ExecutionException, InterruptedException {
+    public List<String> request(int timeoutSeconds, HttpRequest... requests) throws TimeoutException, ExecutionException, InterruptedException {
         List<String> rv = new ArrayList<>(2);
         List<CompletableFuture<HttpResponse<String>>> responses = new ArrayList<>(2);
         for (HttpRequest request : requests) {
