@@ -53,10 +53,7 @@ public class ArrayHelper {
             return null;
         }
         float[] rv = new float[fa.length];
-        int i = -1;
-        for (Float f : fa) {
-            rv[++i] = f;
-        }
+        IntStream.range(0,fa.length).forEach(i -> rv[i]=fa[i]);
         return rv;
     }
 
@@ -64,49 +61,36 @@ public class ArrayHelper {
         if (ia == null) {
             return null;
         }
-        int[] rv = new int[ia.length];
-        int i = -1;
-        for (Integer ii : ia) {
-            rv[++i] = ii;
-        }
-        return rv;
+        return Arrays.stream(ia).mapToInt(Integer::intValue).toArray();
     }
 
     public static Float[] wrap(float[] fa) {
         if (fa == null) {
             return null;
         }
-        return (Float[]) IntStream.range(0, fa.length)
-                .mapToObj(i -> fa[i])
-                .collect(Collectors.toList()).toArray(new Float[fa.length]);
+        return IntStream.range(0, fa.length)
+                .mapToObj(i -> fa[i]).toArray(Float[]::new);
     }
 
     public static Integer[] wrap(int[] ia) {
         if (ia == null) {
             return null;
         }
-        return Arrays.stream(ia).boxed()
-                .collect(Collectors.toList()).toArray(new Integer[ia.length]);
+        return Arrays.stream(ia).boxed().toArray(Integer[]::new);
     }
 
     public static double[] unWrap(Double[] ia) {
         if (ia == null) {
             return null;
         }
-        double[] rv = new double[ia.length];
-        int i = -1;
-        for (Double ii : ia) {
-            rv[++i] = ii;
-        }
-        return rv;
+        return Arrays.stream(ia).mapToDouble(Double::doubleValue).toArray();
     }
 
     public static Double[] wrap(double[] fa) {
         if (fa == null) {
             return null;
         }
-        return Arrays.stream(fa).boxed()
-                .collect(Collectors.toList()).toArray(new Double[fa.length]);
+        return Arrays.stream(fa).boxed().toArray(Double[]::new);
     }
 
     public static boolean[] unWrap(Boolean[] ia) {
@@ -114,10 +98,7 @@ public class ArrayHelper {
             return null;
         }
         boolean[] rv = new boolean[ia.length];
-        int i = -1;
-        for (Boolean ii : ia) {
-            rv[++i] = ii;
-        }
+        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i]);
         return rv;
     }
 
@@ -125,29 +106,22 @@ public class ArrayHelper {
         if (fa == null) {
             return null;
         }
-        return (Boolean[]) IntStream.range(0, fa.length)
-                .mapToObj(i -> fa[i])
-                .collect(Collectors.toList()).toArray(new Boolean[fa.length]);
+        return IntStream.range(0, fa.length)
+                .mapToObj(i -> fa[i]).toArray(Boolean[]::new);
     }
 
     public static long[] unWrap(Long[] ia) {
         if (ia == null) {
             return null;
         }
-        long[] rv = new long[ia.length];
-        int i = -1;
-        for (Long ii : ia) {
-            rv[++i] = ii;
-        }
-        return rv;
+        return Arrays.stream(ia).mapToLong(Long::longValue).toArray();
     }
 
     public static Long[] wrap(long[] fa) {
         if (fa == null) {
             return null;
         }
-        return Arrays.stream(fa).boxed()
-                .collect(Collectors.toList()).toArray(new Long[fa.length]);
+        return Arrays.stream(fa).boxed().toArray(Long[]::new);
     }
 
     public static short[] unWrap(Short[] ia) {
@@ -155,10 +129,7 @@ public class ArrayHelper {
             return null;
         }
         short[] rv = new short[ia.length];
-        int i = -1;
-        for (Short ii : ia) {
-            rv[++i] = ii;
-        }
+        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i]);
         return rv;
     }
 
@@ -166,9 +137,8 @@ public class ArrayHelper {
         if (fa == null) {
             return null;
         }
-        return (Short[]) IntStream.range(0, fa.length)
-                .mapToObj(i -> fa[i])
-                .collect(Collectors.toList()).toArray(new Short[fa.length]);
+        return IntStream.range(0, fa.length)
+                .mapToObj(i -> fa[i]).toArray(Short[]::new);
     }
 
     public static char[] unWrap(Character[] ia) {
@@ -176,10 +146,7 @@ public class ArrayHelper {
             return null;
         }
         char[] rv = new char[ia.length];
-        int i = -1;
-        for (Character ii : ia) {
-            rv[++i] = ii;
-        }
+        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i]);
         return rv;
     }
 
@@ -187,9 +154,8 @@ public class ArrayHelper {
         if (fa == null) {
             return null;
         }
-        return (Character[]) IntStream.range(0, fa.length)
-                .mapToObj(i -> fa[i])
-                .collect(Collectors.toList()).toArray(new Character[fa.length]);
+        return IntStream.range(0, fa.length)
+                .mapToObj(i -> fa[i]).toArray(Character[]::new);
     }
 
     public static byte[] unWrap(Byte[] ia) {
@@ -197,10 +163,7 @@ public class ArrayHelper {
             return null;
         }
         byte[] rv = new byte[ia.length];
-        int i = -1;
-        for (Byte ii : ia) {
-            rv[++i] = ii;
-        }
+        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i]);
         return rv;
     }
 
@@ -208,9 +171,8 @@ public class ArrayHelper {
         if (fa == null) {
             return null;
         }
-        return (Byte[]) IntStream.range(0, fa.length)
-                .mapToObj(i -> fa[i])
-                .collect(Collectors.toList()).toArray(new Byte[fa.length]);
+        return IntStream.range(0, fa.length)
+                .mapToObj(i -> fa[i]).toArray(Byte[]::new);
     }
 
     /**
