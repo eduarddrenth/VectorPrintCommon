@@ -58,7 +58,7 @@ public class ClassHelper {
     * Calls {@link #fromPackage(java.lang.Package, java.lang.ClassLoader) } with
     * Thread.currentThread().getContextClassLoader().
     */
-   public static Set<Class<?>> fromPackage(Package pr) throws IOException, FileNotFoundException, ClassNotFoundException {
+   public static Set<Class<?>> fromPackage(Package pr) {
       return fromPackage(pr, Thread.currentThread().getContextClassLoader());
    }
 
@@ -69,11 +69,8 @@ public class ClassHelper {
     * @param p
     * @param loader
     * @return
-    * @throws IOException
-    * @throws FileNotFoundException
-    * @throws ClassNotFoundException
     */
-   public static Set<Class<?>> fromPackage(Package p, ClassLoader loader) throws IOException, FileNotFoundException, ClassNotFoundException {
+   public static Set<Class<?>> fromPackage(Package p, ClassLoader loader) {
       return getClasses(loader, p.getName());
    }
 
@@ -84,37 +81,36 @@ public class ClassHelper {
     * @param loader
     * @param packageName
     * @return
-    * @throws IOException
-    * @throws FileNotFoundException
-    * @throws ClassNotFoundException
     */
-   public static Set<Class<?>> getClasses(ClassLoader loader, String packageName) throws IOException, FileNotFoundException, ClassNotFoundException {
+   public static Set<Class<?>> getClasses(ClassLoader loader, String packageName) {
       Set<Class<?>> classes = new HashSet<>();
       String path = packageName.replace('.', File.separatorChar);
-      Enumeration<URL> resources = loader.getResources(path);
-      if (resources != null) {
-         while (resources.hasMoreElements()) {
-            String filePath = resources.nextElement().getFile();
-            if (filePath != null) {
-               // WINDOWS HACK
-               if (filePath.indexOf("%20") > 0) {
-                  filePath = filePath.replace("%20", " ");
-               }
-               if ((filePath.indexOf('!') > 0) & (filePath.indexOf(".jar") > 0)) {
-                  String jarPath = filePath.substring(0, filePath.indexOf('!'))
-                      .substring(filePath.indexOf(':') + 1);
-                  // WINDOWS HACK
-                  if (jarPath.indexOf(':') >= 0) {
-                     jarPath = jarPath.substring(1);
-                  }
-                  classes.addAll(getFromJARFile(jarPath, packageName, loader));
-               } else {
-                  classes.addAll(
-                      getFromDirectory(new File(filePath), packageName, loader));
-               }
-            }
-         }
-      }
+      loader.resources(path)
+              .map(r -> r.getFile())
+              .filter(f -> f!=null)
+              .forEach(filePath -> {
+                 // WINDOWS HACK
+                 if (filePath.indexOf("%20") > 0) {
+                    filePath = filePath.replace("%20", " ");
+                 }
+                 if ((filePath.indexOf('!') > 0) & (filePath.indexOf(".jar") > 0)) {
+                    String jarPath = filePath.substring(0, filePath.indexOf('!'))
+                            .substring(filePath.indexOf(':') + 1);
+                    // WINDOWS HACK
+                    if (jarPath.indexOf(':') >= 0) {
+                       jarPath = jarPath.substring(1);
+                    }
+                     try {
+                         classes.addAll(getFromJARFile(jarPath, packageName, loader));
+                     } catch (IOException |ClassNotFoundException e) {
+                         throw new VectorPrintRuntimeException(e);
+                     }
+                 } else {
+                    classes.addAll(
+                            getFromDirectory(new File(filePath), packageName, loader));
+                 }
+
+              });
       return classes;
    }
 
@@ -124,11 +120,10 @@ public class ClassHelper {
     * @param jar
     * @param packageName
     * @return
-    * @throws FileNotFoundException
     * @throws IOException
     * @throws ClassNotFoundException
     */
-   public static Set<Class<?>> getFromJARFile(String jar, String packageName, ClassLoader loader) throws FileNotFoundException, IOException, ClassNotFoundException {
+   public static Set<Class<?>> getFromJARFile(String jar, String packageName, ClassLoader loader) throws IOException, ClassNotFoundException {
       Set<Class<?>> classes = new HashSet<>(200, 50);
       JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
       JarEntry jarEntry;
@@ -153,18 +148,20 @@ public class ClassHelper {
     * @param directory
     * @param packageName
     * @return
-    * @throws ClassNotFoundException
     */
-   public static Set<Class<?>> getFromDirectory(File directory, String packageName, ClassLoader loader) throws ClassNotFoundException {
+   public static Set<Class<?>> getFromDirectory(File directory, String packageName, ClassLoader loader) {
       Set<Class<?>> classes = new HashSet<>(200, 50);
       if (directory.exists()) {
-         for (String file : directory.list()) {
-            if (file.endsWith(".class")) {
-               String name = packageName + '.' + file.replace(".class", "");
-               Class<?> clazz = Class.forName(name, false, loader);
-               classes.add(clazz);
-            }
-         }
+         Arrays.stream(directory.list())
+                 .filter(file -> file.endsWith(".class"))
+                 .map(file -> packageName + '.' + file.replace(".class", ""))
+                 .forEach(name -> {
+                     try {
+                         classes.add(Class.forName(name, false, loader));
+                     } catch (ClassNotFoundException e) {
+                         throw new VectorPrintRuntimeException(e);
+                     }
+                 });
       }
       return classes;
    }

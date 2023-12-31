@@ -118,18 +118,16 @@ public class VersionInfo {
          return;
       }
       JarFile zipFile = new JarFile(file);
-      boolean pomFound = false;
-      for (final Enumeration<? extends ZipEntry> enumeration = zipFile.entries(); enumeration.hasMoreElements();) {
-         ZipEntry zipEntry = enumeration.nextElement();
-         final String name = zipEntry.getName();
-         if (!name.endsWith("pom.properties")) {
-            continue;
-         }
-         final InputStream in = zipFile.getInputStream(zipEntry);
-         ret.put(entry, parsePomProperties(file.length(), in));
-         pomFound = true;
-      }
-      if (!pomFound) {
+      zipFile.stream().filter(zi -> zi.getName().endsWith("pom.properties"))
+              .forEach(zipEntry -> {
+                 try {
+                    final InputStream in = zipFile.getInputStream(zipEntry);
+                    ret.put(entry, parsePomProperties(file.length(), in));
+                 } catch (IOException e) {
+                    throw new VectorPrintRuntimeException(e);
+                 }
+              });
+      if (ret.isEmpty()) {
          // try manifest
          if (zipFile.getManifest().getMainAttributes().containsKey(Attributes.Name.IMPLEMENTATION_VERSION)) {
             ret.put(entry, new VersionInformation(entry, "unknown",
