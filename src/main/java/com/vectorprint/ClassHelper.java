@@ -34,6 +34,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -245,13 +247,13 @@ public class ClassHelper {
       if (subclass.getSuperclass() != null && classWithParameter.isAssignableFrom(subclass.getSuperclass())) {
          return subclass.getGenericSuperclass();
       } else {
-         int i = 0;
-         for (Class in : subclass.getInterfaces()) {
-            if (classWithParameter.isAssignableFrom(in)) {
-               return subclass.getGenericInterfaces()[i];
-            }
-            i++;
-         }
+          Class<?>[] interfaces = subclass.getInterfaces();
+          for (int j = 0; j < interfaces.length; j++) {
+              Class in = interfaces[j];
+              if (classWithParameter.isAssignableFrom(in)) {
+                  return subclass.getGenericInterfaces()[j];
+              }
+          }
          return null;
       }
    }
@@ -314,14 +316,7 @@ public class ClassHelper {
             if (parameters.length != parameterTypes.length) {
                 continue;
             }
-            boolean ok = true;
-            for (int i = 0; i < parameters.length; i++) {
-                if (!parameters[i].isAssignableFrom(parameterTypes[i])) {
-                    ok = false;
-                    break;
-                }
-            }
-            if (ok) {
+            if (IntStream.range(0, parameters.length).allMatch(i -> parameters[i].isAssignableFrom(parameterTypes[i]))) {
                 return (Constructor<T>) con;
             }
         }
