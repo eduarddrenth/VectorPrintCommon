@@ -24,13 +24,12 @@ package com.vectorprint;
 
 
 import com.vectorprint.certificates.CertificateHelper;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
 /**

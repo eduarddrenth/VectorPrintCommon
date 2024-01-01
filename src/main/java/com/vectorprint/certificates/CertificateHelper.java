@@ -25,7 +25,6 @@ package com.vectorprint.certificates;
 
 import com.vectorprint.ArrayHelper;
 import com.vectorprint.IOHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

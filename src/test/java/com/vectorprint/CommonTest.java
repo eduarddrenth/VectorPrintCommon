@@ -24,7 +24,6 @@ package com.vectorprint;
 
 
 import com.vectorprint.testing.ThreadTester;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
