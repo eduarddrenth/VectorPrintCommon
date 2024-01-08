@@ -20,19 +20,20 @@ package com.vectorprint;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class VersionInfo {
 
@@ -67,7 +68,7 @@ public class VersionInfo {
 
       for (VersionInformation mi : getVersionInfo().values()) {
          String name = mi.artifactId.equals(mi.groupId) ? mi.artifactId : (mi.groupId + '/' + mi.artifactId);
-         LOG.info("Maven library {0} v{1} on {2}, size={3}", name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size));
+         LOG.info("Maven library {} v{} on {}, size={}", name, mi.version, mi.buildDate, formatNumber("#,##0", mi.size));
       }
    }
 
@@ -97,13 +98,13 @@ public class VersionInfo {
       String[] parts = System.getProperty("java.class.path").split(File.pathSeparator);
       Map<String, VersionInformation> ret = getVersionInfo(parts);
       if (ret.isEmpty()) {
-         LOG.warn("Unable to find version info in class path= {0}", System.getProperty("java.class.path"));
+         LOG.warn("Unable to find version info in class path= {}", System.getProperty("java.class.path"));
       } else if (parts.length == 1) {
          // perhaps started with -jar and classpath in manifest
-         JarFile zipFile = new JarFile(parts[0]);
-         String base = new File(parts[0]).getParent() + File.separator;
-         if (zipFile.getManifest().getMainAttributes().containsKey(Attributes.Name.CLASS_PATH)) {
-            return getVersionInfo(zipFile.getManifest().getMainAttributes().getValue(Attributes.Name.CLASS_PATH).split(" +"));
+         try (JarFile zipFile = new JarFile(parts[0])) {
+            if (zipFile.getManifest().getMainAttributes().containsKey(Attributes.Name.CLASS_PATH)) {
+               return getVersionInfo(zipFile.getManifest().getMainAttributes().getValue(Attributes.Name.CLASS_PATH).split(" +"));
+            }
          }
       }
       return ret;
@@ -114,21 +115,22 @@ public class VersionInfo {
       if (!file.isFile()) {
          return;
       }
-      JarFile zipFile = new JarFile(file);
-      zipFile.stream().filter(zi -> zi.getName().endsWith("pom.properties"))
-              .forEach(zipEntry -> {
-                 try {
-                    final InputStream in = zipFile.getInputStream(zipEntry);
-                    ret.put(entry, parsePomProperties(file.length(), in));
-                 } catch (IOException e) {
-                    throw new VectorPrintRuntimeException(e);
-                 }
-              });
-      if (ret.isEmpty()) {
-         // try manifest
-         if (zipFile.getManifest().getMainAttributes().containsKey(Attributes.Name.IMPLEMENTATION_VERSION)) {
-            ret.put(entry, new VersionInformation(entry, "unknown",
-                zipFile.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION), "unknown", file.length()));
+      try (JarFile zipFile = new JarFile(file)) {
+         zipFile.stream().filter(zi -> zi.getName().endsWith("pom.properties"))
+                 .forEach(zipEntry -> {
+                    try {
+                       final InputStream in = zipFile.getInputStream(zipEntry);
+                       ret.put(entry, parsePomProperties(file.length(), in));
+                    } catch (IOException e) {
+                       throw new VectorPrintRuntimeException(e);
+                    }
+                 });
+         if (ret.isEmpty()) {
+            // try manifest
+            if (zipFile.getManifest().getMainAttributes().containsKey(Attributes.Name.IMPLEMENTATION_VERSION)) {
+               ret.put(entry, new VersionInformation(entry, "unknown",
+                       zipFile.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION), "unknown", file.length()));
+            }
          }
       }
    }
@@ -170,13 +172,13 @@ public class VersionInfo {
       @Override
       public String toString() {
          String name = artifactId.equals(groupId) ? artifactId : (groupId + '/' + artifactId);
-         return new StringBuilder("name: ").append(name).append(", version: ").append(version).append(", buildDate: ")
-             .append(buildDate).append(", size: ").append(formatNumber("#,##0", size)).toString();
+         return "name: " + name + ", version: " + version + ", buildDate: " +
+                 buildDate + ", size: " + formatNumber("#,##0", size);
       }
    }
 
    private static VersionInformation parsePomProperties(long length, InputStream in) throws IOException {
-      final BufferedReader br = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+      final BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
       String version = "unknown";
       String buildDate = "unknown";
       String groupId = "unknown";

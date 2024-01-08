@@ -43,7 +43,7 @@ public interface StringConverter<T> {
 
     T convert(String val);
 
-    public static class FloatParser implements StringConverter<Float> {
+    class FloatParser implements StringConverter<Float> {
 
         @Override
         public Float convert(String val) {
@@ -51,7 +51,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class LongParser implements StringConverter<Long> {
+    class LongParser implements StringConverter<Long> {
 
         @Override
         public Long convert(String val) {
@@ -59,7 +59,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class DoubleParser implements StringConverter<Double> {
+    class DoubleParser implements StringConverter<Double> {
 
         @Override
         public Double convert(String val) {
@@ -67,7 +67,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class BigDecimalParser implements StringConverter<BigDecimal> {
+    class BigDecimalParser implements StringConverter<BigDecimal> {
 
         @Override
         public BigDecimal convert(String val) {
@@ -75,7 +75,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class BigIntegerParser implements StringConverter<BigInteger> {
+    class BigIntegerParser implements StringConverter<BigInteger> {
 
         @Override
         public BigInteger convert(String val) {
@@ -83,7 +83,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class BooleanParser implements StringConverter<Boolean> {
+    class BooleanParser implements StringConverter<Boolean> {
 
         @Override
         public Boolean convert(String val) {
@@ -94,7 +94,7 @@ public interface StringConverter<T> {
     /**
      * next to decoding supports using color names like red
      */
-    public static class ColorParser implements StringConverter<Color> {
+    class ColorParser implements StringConverter<Color> {
 
         @Override
         public Color convert(String value) {
@@ -121,7 +121,7 @@ public interface StringConverter<T> {
      * tries to construct a URL from a String. When a MalformedURLException is
      * thrown and a File exists the URL is created via new File.
      */
-    public static class URLParser implements StringConverter<URL> {
+    class URLParser implements StringConverter<URL> {
 
         @Override
         public URL convert(String val) {
@@ -144,7 +144,7 @@ public interface StringConverter<T> {
     /**
      * Constructs a File from a String.
      */
-    public static class FileParser implements StringConverter<File> {
+    class FileParser implements StringConverter<File> {
 
         @Override
         public File convert(String val) {
@@ -152,7 +152,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class ClassParser implements StringConverter<Class> {
+    class ClassParser implements StringConverter<Class> {
 
         @Override
         public Class convert(String val) {
@@ -165,7 +165,7 @@ public interface StringConverter<T> {
 
     }
 
-    public static class IntParser implements StringConverter<Integer> {
+    class IntParser implements StringConverter<Integer> {
 
         @Override
         public Integer convert(String val) {
@@ -173,11 +173,11 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class CharParser implements StringConverter<Character> {
+    class CharParser implements StringConverter<Character> {
 
         @Override
         public Character convert(String val) {
-            if (val == null || val.length() == 0) {
+            if (val == null || val.isEmpty()) {
                 return null;
             } else if (val.length() > 1) {
                 throw new VectorPrintRuntimeException(String.format("cannot turn %s into one Character", val));
@@ -186,7 +186,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class ShortParser implements StringConverter<Short> {
+    class ShortParser implements StringConverter<Short> {
 
         @Override
         public Short convert(String val) {
@@ -194,7 +194,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class ByteParser implements StringConverter<Byte> {
+    class ByteParser implements StringConverter<Byte> {
 
         @Override
         public Byte convert(String val) {
@@ -205,7 +205,7 @@ public interface StringConverter<T> {
     /**
      * uses {@link DateFormat#getInstance() }
      */
-    public static class DateParser implements StringConverter<Date> {
+    class DateParser implements StringConverter<Date> {
 
         @Override
         public Date convert(String val) {
@@ -217,7 +217,7 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class LocalDateTimeParser implements StringConverter<LocalDateTime> {
+    class LocalDateTimeParser implements StringConverter<LocalDateTime> {
 
         @Override
         public LocalDateTime convert(String val) {
@@ -225,32 +225,32 @@ public interface StringConverter<T> {
         }
     }
 
-    public static class RegexParser implements StringConverter<Pattern> {
+    class RegexParser implements StringConverter<Pattern> {
 
         @Override
         public Pattern convert(String val) {
             return Pattern.compile(val);
         }
     }
-    public static final IntParser INT_PARSER = new IntParser();
-    public static final CharParser CHAR_PARSER = new CharParser();
-    public static final ShortParser SHORT_PARSER = new ShortParser();
-    public static final ByteParser BYTE_PARSER = new ByteParser();
-    public static final LongParser LONG_PARSER = new LongParser();
-    public static final FloatParser FLOAT_PARSER = new FloatParser();
-    public static final DoubleParser DOUBLE_PARSER = new DoubleParser();
-    public static final BigIntegerParser BIG_INTEGER_PARSER = new BigIntegerParser();
-    public static final BigDecimalParser BIG_DECIMAL_PARSER = new BigDecimalParser();
-    public static final URLParser URL_PARSER = new URLParser();
-    public static final FileParser FILE_PARSER = new FileParser();
-    public static final ClassParser CLASS_PARSER = new ClassParser();
-    public static final BooleanParser BOOLEAN_PARSER = new BooleanParser();
-    public static final ColorParser COLOR_PARSER = new ColorParser();
-    public static final DateParser DATE_PARSER = new DateParser();
-    public static final LocalDateTimeParser LOCAL_DATE_TIME_PARSER = new LocalDateTimeParser();
-    public static final RegexParser REGEX_PARSER = new RegexParser();
+    IntParser INT_PARSER = new IntParser();
+    CharParser CHAR_PARSER = new CharParser();
+    ShortParser SHORT_PARSER = new ShortParser();
+    ByteParser BYTE_PARSER = new ByteParser();
+    LongParser LONG_PARSER = new LongParser();
+    FloatParser FLOAT_PARSER = new FloatParser();
+    DoubleParser DOUBLE_PARSER = new DoubleParser();
+    BigIntegerParser BIG_INTEGER_PARSER = new BigIntegerParser();
+    BigDecimalParser BIG_DECIMAL_PARSER = new BigDecimalParser();
+    URLParser URL_PARSER = new URLParser();
+    FileParser FILE_PARSER = new FileParser();
+    ClassParser CLASS_PARSER = new ClassParser();
+    BooleanParser BOOLEAN_PARSER = new BooleanParser();
+    ColorParser COLOR_PARSER = new ColorParser();
+    DateParser DATE_PARSER = new DateParser();
+    LocalDateTimeParser LOCAL_DATE_TIME_PARSER = new LocalDateTimeParser();
+    RegexParser REGEX_PARSER = new RegexParser();
 
-    public static StringConverter forClass(Class clazz) {
+    static StringConverter forClass(Class clazz) {
         if (Integer.class.equals(clazz)) {
             return INT_PARSER;
         } else if (Character.class.equals(clazz)) {

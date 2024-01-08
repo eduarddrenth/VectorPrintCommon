@@ -21,8 +21,9 @@ package com.vectorprint;
  */
 
 
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 public class StringConverterTest {
 

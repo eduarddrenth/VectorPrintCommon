@@ -22,10 +22,11 @@ package com.vectorprint.testing;
  */
 
 
+import org.opentest4j.AssertionFailedError;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.opentest4j.AssertionFailedError;
 
 /**
  * Class that supports doing assertion in a Thread. Just do

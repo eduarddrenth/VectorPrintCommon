@@ -23,7 +23,6 @@ package com.vectorprint;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -32,12 +31,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -84,8 +85,8 @@ public class ClassHelper {
       Set<Class<?>> classes = new HashSet<>();
       String path = packageName.replace('.', File.separatorChar);
       loader.resources(path)
-              .map(r -> r.getFile())
-              .filter(f -> f!=null)
+              .map(URL::getFile)
+              .filter(Objects::nonNull)
               .forEach(filePath -> {
                  // WINDOWS HACK
                  if (filePath.indexOf("%20") > 0) {
@@ -150,7 +151,7 @@ public class ClassHelper {
    public static Set<Class<?>> getFromDirectory(File directory, String packageName, ClassLoader loader) {
       Set<Class<?>> classes = new HashSet<>(200, 50);
       if (directory.exists()) {
-         Arrays.stream(directory.list())
+         Arrays.stream(Objects.requireNonNull(directory.list()))
                  .filter(file -> file.endsWith(".class"))
                  .map(file -> packageName + '.' + file.replace(".class", ""))
                  .forEach(name -> {
@@ -198,9 +199,8 @@ public class ClassHelper {
          Map<TypeVariable, Class<?>> varsCurrent = new HashMap<>(3);
          Type parent = subclass;
          while ((parent = getGenericSuperType((Class) parent, classWithParameter)) != null) {
-            if (parent instanceof ParameterizedType) {
-               ParameterizedType pa = (ParameterizedType) parent;
-               TypeVariable[] pars = getClass(pa.getRawType()).getTypeParameters();
+            if (parent instanceof ParameterizedType pa) {
+                TypeVariable[] pars = getClass(pa.getRawType()).getTypeParameters();
                int i = 0;
                for (Type t : pa.getActualTypeArguments()) {
                   /*
@@ -286,11 +286,8 @@ public class ClassHelper {
     * thread and the first argument which should be a package name.
     *
     * @param args
-    * @throws IOException
-    * @throws FileNotFoundException
-    * @throws ClassNotFoundException
     */
-   public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException {
+   public static void main(String[] args) {
       if (args.length < 1) {
          System.out.println("pass a package name as argument");
       } else {

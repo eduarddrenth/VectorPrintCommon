@@ -35,6 +35,9 @@ package com.vectorprint;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -46,8 +49,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -84,7 +85,7 @@ public class RequestHelper {
      * @throws InterruptedException 
      */
     public String request(HttpRequest request, int timeoutSeconds) throws TimeoutException, ExecutionException, InterruptedException {
-        List<String> r = request(timeoutSeconds, new HttpRequest[] {request});
+        List<String> r = request(timeoutSeconds, request);
         return r.isEmpty() ? "" : r.get(0);
     }
     
@@ -105,7 +106,7 @@ public class RequestHelper {
             responses.add(httpClient
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)));
         }
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(responses.toArray(new CompletableFuture[responses.size()]));
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(responses.toArray(new CompletableFuture[0]));
 
         allOf.get(timeoutSeconds, TimeUnit.SECONDS);
         short i = -1;
