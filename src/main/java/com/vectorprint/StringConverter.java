@@ -251,19 +251,19 @@ public interface StringConverter<T> {
     RegexParser REGEX_PARSER = new RegexParser();
 
     static StringConverter forClass(Class clazz) {
-        if (Integer.class.equals(clazz)) {
+        if (Integer.class.equals(clazz)||int.class.equals(clazz)) {
             return INT_PARSER;
-        } else if (Character.class.equals(clazz)) {
+        } else if (Character.class.equals(clazz)||char.class.equals(clazz)) {
             return CHAR_PARSER;
-        } else if (Short.class.equals(clazz)) {
+        } else if (Short.class.equals(clazz)||short.class.equals(clazz)) {
             return SHORT_PARSER;
-        } else if (Byte.class.equals(clazz)) {
+        } else if (Byte.class.equals(clazz)||byte.class.equals(clazz)) {
             return BYTE_PARSER;
-        } else if (Long.class.equals(clazz)) {
+        } else if (Long.class.equals(clazz)||long.class.equals(clazz)) {
             return LONG_PARSER;
-        } else if (Float.class.equals(clazz)) {
+        } else if (Float.class.equals(clazz)||float.class.equals(clazz)) {
             return FLOAT_PARSER;
-        } else if (Double.class.equals(clazz)) {
+        } else if (Double.class.equals(clazz)||double.class.equals(clazz)) {
             return DOUBLE_PARSER;
         } else if (BigInteger.class.equals(clazz)) {
             return BIG_INTEGER_PARSER;
@@ -275,7 +275,7 @@ public interface StringConverter<T> {
             return FILE_PARSER;
         } else if (Class.class.equals(clazz)) {
             return CLASS_PARSER;
-        } else if (Boolean.class.equals(clazz)) {
+        } else if (Boolean.class.equals(clazz)||boolean.class.equals(clazz)) {
             return BOOLEAN_PARSER;
         } else if (Color.class.equals(clazz)) {
             return COLOR_PARSER;
