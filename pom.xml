@@ -117,7 +117,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>3.0.4</version>
+                <version>3.0.1</version>
                 <configuration>
                     <releaseProfiles>release</releaseProfiles>
                     <useReleaseProfile>true</useReleaseProfile>
@@ -186,7 +186,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15to18</artifactId>
-            <version>1.75</version>
+            <version>1.77</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -199,7 +199,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.6.0</version>
+                        <version>3.6.2</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
