@@ -38,6 +38,8 @@ package com.vectorprint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -47,6 +49,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -54,10 +59,12 @@ import java.util.concurrent.TimeoutException;
  *
  * @author eduard
  */
-public class RequestHelper {
+public class RequestHelper implements Closeable, AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHelper.class);
     
     private final HttpClient httpClient;
+
+    private final Executor executor;
 
     /**
      * provide your own httpclient that will be (re)used by this helper;
@@ -65,13 +72,14 @@ public class RequestHelper {
      */
     public RequestHelper(HttpClient httpClient) {
         this.httpClient = httpClient;
+        executor = httpClient.executor().orElse(null);
     }
 
     /**
      * Initialize this helper with a default httpclient.
      */
     public RequestHelper() {
-        this(HttpClient.newBuilder().build());
+        this(HttpClient.newBuilder().executor(Executors.newCachedThreadPool()).build());
     }
    
 
@@ -123,5 +131,13 @@ public class RequestHelper {
 
         return rv;
     }
-    
+
+    /**
+     * Calls {@link ExecutorService#shutdown()} if applicable
+     * @throws IOException
+     */
+    @Override
+    public void close() throws IOException {
+        if (executor != null && executor instanceof ExecutorService service) {service.shutdown();}
+    }
 }
