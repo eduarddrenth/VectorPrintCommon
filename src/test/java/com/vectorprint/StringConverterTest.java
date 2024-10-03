@@ -24,6 +24,7 @@ package com.vectorprint;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class StringConverterTest {
 
@@ -31,5 +32,7 @@ public class StringConverterTest {
     public void testConvert() {
         StringConverter.forClass(LocalDateTime.class)
                 .convert("2021-02-12T00:59:10");
+        StringConverter.forClass(Date.class)
+                .convert("23-03-2023 13:07:47");
     }
 }

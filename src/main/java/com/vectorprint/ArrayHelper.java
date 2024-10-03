@@ -52,7 +52,7 @@ public class ArrayHelper {
             return null;
         }
         float[] rv = new float[fa.length];
-        IntStream.range(0,fa.length).forEach(i -> rv[i]=fa[i].floatValue());
+        IntStream.range(0,fa.length).forEach(i -> rv[i]= fa[i]);
         return rv;
     }
 
@@ -97,7 +97,7 @@ public class ArrayHelper {
             return null;
         }
         boolean[] rv = new boolean[ia.length];
-        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i].booleanValue());
+        IntStream.range(0,ia.length).forEach(i -> rv[i]= ia[i]);
         return rv;
     }
 
@@ -128,7 +128,7 @@ public class ArrayHelper {
             return null;
         }
         short[] rv = new short[ia.length];
-        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i].shortValue());
+        IntStream.range(0,ia.length).forEach(i -> rv[i]= ia[i]);
         return rv;
     }
 
@@ -145,7 +145,7 @@ public class ArrayHelper {
             return null;
         }
         char[] rv = new char[ia.length];
-        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i].charValue());
+        IntStream.range(0,ia.length).forEach(i -> rv[i]= ia[i]);
         return rv;
     }
 
@@ -162,7 +162,7 @@ public class ArrayHelper {
             return null;
         }
         byte[] rv = new byte[ia.length];
-        IntStream.range(0,ia.length).forEach(i -> rv[i]=ia[i].byteValue());
+        IntStream.range(0,ia.length).forEach(i -> rv[i]= ia[i]);
         return rv;
     }
 

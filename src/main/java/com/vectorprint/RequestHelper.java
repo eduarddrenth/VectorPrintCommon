@@ -137,7 +137,7 @@ public class RequestHelper implements Closeable, AutoCloseable {
      * @throws IOException
      */
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (executor != null && executor instanceof ExecutorService service) {service.shutdown();}
     }
 }

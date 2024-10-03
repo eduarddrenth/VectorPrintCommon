@@ -203,8 +203,10 @@ public interface StringConverter<T> {
     }
 
     /**
+     * @deprecated Date should not be used
      * uses {@link DateFormat#getInstance() }
      */
+    @Deprecated(forRemoval = true)
     class DateParser implements StringConverter<Date> {
 
         @Override
