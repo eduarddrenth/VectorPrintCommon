@@ -98,7 +98,7 @@ public class RequestHelper implements Closeable, AutoCloseable {
     }
     
     /**
-     * Executes all requests in parallel, waits timeoutSeconds for all to finish. Returns a list equal in size to the number of requests, holding the response bodies.
+     * Executes all requests in parallel, waits timeoutSeconds for all to finish. Returns a list equal in size to the number of requests, holding the response bodies (String assumed).
      * When a response code is not 200 a warning is logged and an empty String is added to the list.
      * @param timeoutSeconds
      * @param requests
