@@ -28,9 +28,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -201,25 +199,7 @@ public interface StringConverter<T> {
             return Byte.decode(val);
         }
     }
-
-    /**
-     * @deprecated Date should not be used
-     * uses {@link DateFormat#getInstance() }
-     */
-    @Deprecated(forRemoval = true)
-    class DateParser implements StringConverter<Date> {
-
-        @Override
-        public Date convert(String val) {
-            try {
-                return DateFormat.getInstance().parse(val);
-            } catch (java.text.ParseException ex) {
-                throw new VectorPrintRuntimeException(ex);
-            }
-        }
-    }
-
-    class LocalDateTimeParser implements StringConverter<LocalDateTime> {
+     class LocalDateTimeParser implements StringConverter<LocalDateTime> {
 
         @Override
         public LocalDateTime convert(String val) {
@@ -248,7 +228,6 @@ public interface StringConverter<T> {
     ClassParser CLASS_PARSER = new ClassParser();
     BooleanParser BOOLEAN_PARSER = new BooleanParser();
     ColorParser COLOR_PARSER = new ColorParser();
-    DateParser DATE_PARSER = new DateParser();
     LocalDateTimeParser LOCAL_DATE_TIME_PARSER = new LocalDateTimeParser();
     RegexParser REGEX_PARSER = new RegexParser();
 
@@ -281,8 +260,6 @@ public interface StringConverter<T> {
             return BOOLEAN_PARSER;
         } else if (Color.class.equals(clazz)) {
             return COLOR_PARSER;
-        } else if (Date.class.equals(clazz)) {
-            return DATE_PARSER;
         } else if (LocalDateTime.class.equals(clazz)) {
             return LOCAL_DATE_TIME_PARSER;
         } else if (Pattern.class.equals(clazz)) {

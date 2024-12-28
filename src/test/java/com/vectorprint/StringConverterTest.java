@@ -21,8 +21,10 @@ package com.vectorprint;
  */
 
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,7 +34,11 @@ public class StringConverterTest {
     public void testConvert() {
         StringConverter.forClass(LocalDateTime.class)
                 .convert("2021-02-12T00:59:10");
-        StringConverter.forClass(Date.class)
-                .convert("2024-12-23 13:07:47");
+        try {
+            StringConverter.forClass(Date.class)
+                    .convert("2024-12-23 13:07:47");
+            Assertions.fail("Date not supported");
+        } catch (IllegalArgumentException e) {
+        }
     }
 }
