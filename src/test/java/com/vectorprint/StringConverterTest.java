@@ -33,6 +33,6 @@ public class StringConverterTest {
         StringConverter.forClass(LocalDateTime.class)
                 .convert("2021-02-12T00:59:10");
         StringConverter.forClass(Date.class)
-                .convert("23-03-2023T13:07:47");
+                .convert("2024-12-23T13:07:47");
     }
 }
