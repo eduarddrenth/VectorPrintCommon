@@ -24,9 +24,9 @@ package com.vectorprint;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -56,19 +57,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- *
  * @author eduard
  */
 public class RequestHelper implements Closeable, AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHelper.class);
-    
+
     private final HttpClient httpClient;
 
     private final Executor executor;
 
     /**
      * provide your own httpclient that will be (re)used by this helper;
-     * @param httpClient 
+     *
+     * @param httpClient
      */
     public RequestHelper(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -81,38 +82,40 @@ public class RequestHelper implements Closeable, AutoCloseable {
     public RequestHelper() {
         this(HttpClient.newBuilder().executor(Executors.newCachedThreadPool()).build());
     }
-   
+
 
     /**
      * Calls {@link #request(int, java.net.http.HttpRequest...) }
+     *
      * @param request
      * @param timeoutSeconds
      * @return
      * @throws TimeoutException
      * @throws ExecutionException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     public String request(HttpRequest request, int timeoutSeconds) throws TimeoutException, ExecutionException, InterruptedException {
         List<String> r = request(timeoutSeconds, request);
         return r.isEmpty() ? "" : r.get(0);
     }
-    
+
     /**
      * Executes all requests in parallel, waits timeoutSeconds for all to finish. Returns a list equal in size to the number of requests, holding the response bodies (String assumed).
      * When a response code is not 200 a warning is logged and an empty String is added to the list.
+     *
      * @param timeoutSeconds
      * @param requests
      * @return
      * @throws TimeoutException
      * @throws ExecutionException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     public List<String> request(int timeoutSeconds, HttpRequest... requests) throws TimeoutException, ExecutionException, InterruptedException {
         List<String> rv = new ArrayList<>(2);
         List<CompletableFuture<HttpResponse<String>>> responses = new ArrayList<>(2);
         for (HttpRequest request : requests) {
             responses.add(httpClient
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)));
+                    .sendAsync(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)));
         }
         CompletableFuture<Void> allOf = CompletableFuture.allOf(responses.toArray(new CompletableFuture[0]));
 
@@ -122,22 +125,48 @@ public class RequestHelper implements Closeable, AutoCloseable {
             i++;
             HttpResponse<String> response = cr.get();
             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                if (!"null".equals(response.body())) rv.add(response.body()); else rv.add("");
+                if (!"null".equals(response.body())) rv.add(response.body());
+                else rv.add("");
             } else {
                 rv.add("");
                 LOGGER.warn(String.format("request to %s failed with %d", requests[i].uri().toString(), response.statusCode()));
-            }                
+            }
         }
 
         return rv;
     }
 
+    public void request(int timeoutSeconds, HttpRequest request, OutputStream out) {
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .orTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .whenComplete((response, exception) -> {
+                    if (exception != null) {
+                        LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()), exception);
+                    } else if (response != null) {
+                        try {
+                            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+                                response.body().transferTo(out);
+                            } else {
+                                LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()));
+                            }
+                        } catch (IOException e) {
+                            LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()), e);
+                        }
+                    } else {
+                        LOGGER.warn(String.format("request to %s yields no response", request.uri().toString()));
+                    }
+                });
+    }
+
     /**
      * Calls {@link ExecutorService#shutdown()} if applicable
+     *
      * @throws IOException
      */
     @Override
     public void close() {
-        if (executor != null && executor instanceof ExecutorService service) {service.shutdown();}
+        if (executor != null && executor instanceof ExecutorService service) {
+            service.shutdown();
+        }
     }
 }
