@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
@@ -143,9 +144,9 @@ public class RequestHelper implements Closeable, AutoCloseable {
                     if (exception != null) {
                         LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()), exception);
                     } else if (response != null) {
-                        try {
+                        try (InputStream in = response.body(); out) {
                             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                                response.body().transferTo(out);
+                                in.transferTo(out);
                             } else {
                                 LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()));
                             }
