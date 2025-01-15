@@ -137,26 +137,18 @@ public class RequestHelper implements Closeable, AutoCloseable {
         return rv;
     }
 
-    public void request(int timeoutSeconds, HttpRequest request, OutputStream out) {
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .orTimeout(timeoutSeconds, TimeUnit.SECONDS)
-                .whenComplete((response, exception) -> {
-                    if (exception != null) {
-                        LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()), exception);
-                    } else if (response != null) {
-                        try (InputStream in = response.body(); out) {
-                            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                                in.transferTo(out);
-                            } else {
-                                LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()));
-                            }
-                        } catch (IOException e) {
-                            LOGGER.warn(String.format("request to %s failed", request.uri().toString(), response.statusCode()), e);
-                        }
-                    } else {
-                        LOGGER.warn(String.format("request to %s yields no response", request.uri().toString()));
-                    }
-                });
+    public void request(int timeoutSeconds, HttpRequest request, OutputStream out) throws ExecutionException, InterruptedException, TimeoutException {
+        final CompletableFuture<HttpResponse<InputStream>> resp = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream());
+        final HttpResponse<InputStream> response = resp.get(timeoutSeconds, TimeUnit.SECONDS);
+        try (InputStream in = response.body(); out) {
+            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+                in.transferTo(out);
+            } else {
+                LOGGER.warn(String.format("request to %s failed, status %d", request.uri().toString(), response.statusCode()));
+            }
+        } catch (IOException e) {
+            LOGGER.warn(String.format("request to %s failed, status %d", request.uri().toString(), response.statusCode()), e);
+        }
     }
 
     /**
