@@ -34,7 +34,9 @@ import java.nio.channels.WritableByteChannel;
  * Fast NIO based helper
  *
  * @author Eduard Drenth at VectorPrint.nl
+ * @deprecated use {@link InputStream#transferTo(OutputStream)}
  */
+@Deprecated
 public class IOHelper {
 
    private IOHelper() {
@@ -46,7 +48,9 @@ public class IOHelper {
     * @param input
     * @param output
     * @throws IOException
+    * @deprecated use {@link InputStream#transferTo(OutputStream)}
     */
+   @Deprecated
    public static <T extends OutputStream> T load(InputStream input, T output) throws IOException {
       return load(input, output, 256000, true);
    }
@@ -58,7 +62,9 @@ public class IOHelper {
     * @param bufferSize
     * @param close
     * @throws IOException
+    * @deprecated use {@link InputStream#transferTo(OutputStream)}
     */
+   @Deprecated
    public static <T extends OutputStream> T load(InputStream input, T output, int bufferSize, boolean close) throws IOException {
       ReadableByteChannel in = Channels.newChannel(input);
       WritableByteChannel out = Channels.newChannel(output);
