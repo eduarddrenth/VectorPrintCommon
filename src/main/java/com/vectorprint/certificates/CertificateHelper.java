@@ -24,7 +24,6 @@ package com.vectorprint.certificates;
 
 
 import com.vectorprint.ArrayHelper;
-import com.vectorprint.IOHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,8 +68,9 @@ public class CertificateHelper {
     */
    public static Certificate loadCertificate(InputStream in, String type) throws IOException, CertificateException {
          ByteArrayOutputStream out = new ByteArrayOutputStream();
+         in.transferTo(out);
          return CertificateFactory.getInstance(type)
-             .generateCertificate(new ByteArrayInputStream(IOHelper.load(in, out).toByteArray()));
+             .generateCertificate(new ByteArrayInputStream(out.toByteArray()));
    }
 
    /**
@@ -83,7 +83,8 @@ public class CertificateHelper {
    public static KeyStore loadKeyStore(InputStream in, String keystoretype, char[] password) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
          KeyStore ks = KeyStore.getInstance(keystoretype);
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         ks.load(new ByteArrayInputStream(IOHelper.load(in, out).toByteArray()), password);
+         in.transferTo(out);
+         ks.load(new ByteArrayInputStream(out.toByteArray()), password);
          ArrayHelper.clear(password);
          return ks;
    }
