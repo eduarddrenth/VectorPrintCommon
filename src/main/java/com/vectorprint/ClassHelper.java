@@ -175,7 +175,8 @@ public class ClassHelper {
     * @return a class or null
     */
    public static <T> Class<?> findParameterClass(int paramNum, Class<? extends T> subclass, Class<T> classWithParameter) {
-      return findParameterClasses(subclass, classWithParameter).get(paramNum);
+      List<Class<?>> classes = findParameterClasses(subclass, classWithParameter);
+      return (classes == null || paramNum >= classes.size()) ? null : classes.get(paramNum);
    }
 
    /**
@@ -188,45 +189,64 @@ public class ClassHelper {
     * @return a List of java class for the class parameters, or null
     */
    public static <T> List<Class<?>> findParameterClasses(Class<? extends T> subclass, Class<T> classWithParameter) {
-      List<Class<?>> parameterClasses = null;
-      // conditions
-      TypeVariable[] params = classWithParameter.getTypeParameters();
-      if (params.length > 0) { // parameters have to be present
+      TypeVariable<?>[] params = classWithParameter.getTypeParameters();
+      if (params.length == 0) {
+         return null;
+      }
 
-         parameterClasses = new ArrayList<>(params.length);
-         // to keep track of where parameters go in the class hierarchy
-         Map<TypeVariable, Class<?>> varsPrevious = new HashMap<>(3);
-         Map<TypeVariable, Class<?>> varsCurrent = new HashMap<>(3);
-         Type parent = subclass;
-         while ((parent = getGenericSuperType((Class) parent, classWithParameter)) != null) {
-            if (parent instanceof ParameterizedType pa) {
-                TypeVariable[] pars = getClass(pa.getRawType()).getTypeParameters();
-               int i = 0;
-               for (Type t : pa.getActualTypeArguments()) {
-                  /*
-                   * the number of getActualTypeArguments and getTypeParameters of the parent is always the same
-                   *
-                   * when t is a typevariable, we may find its class in previously processed type variables
-                   *
-                   * working this way finds the correct type, also when order of parameters changes in the hierarchy
-                   */
-                  if (t instanceof TypeVariable) {
-                     varsCurrent.put(pars[i++], varsPrevious.getOrDefault(t, null));
-                  } else {
-                     varsCurrent.put(pars[i++], getClass(t));
-                  }
-               }
-               parent = pa.getRawType();
+      // to keep track of where parameters go in the class hierarchy
+      Map<TypeVariable<?>, Class<?>> varsPrevious = new HashMap<>(3);
+      Map<TypeVariable<?>, Class<?>> varsCurrent = new HashMap<>(3);
+      Class<?> currentClass = subclass;
+
+      while (currentClass != null && currentClass != Object.class) {
+         Type parentType = getGenericSuperType((Class) currentClass, classWithParameter);
+         if (parentType == null) {
+            break;
+         }
+
+         if (parentType instanceof ParameterizedType pa) {
+            TypeVariable<?>[] typeParameters = ((Class<?>) pa.getRawType()).getTypeParameters();
+            Type[] actualTypeArguments = pa.getActualTypeArguments();
+
+            for (int i = 0; i < actualTypeArguments.length; i++) {
+               varsCurrent.put(typeParameters[i], resolveClass(actualTypeArguments[i], varsPrevious));
             }
-            varsPrevious.clear();
-            varsPrevious.putAll(varsCurrent);
-            varsCurrent.clear();
+            currentClass = (Class<?>) pa.getRawType();
+         } else {
+            currentClass = (Class<?>) parentType;
          }
-         for (TypeVariable tv : params) {
-            parameterClasses.add(varsPrevious.get(tv));
-         }
+         varsPrevious.clear();
+         varsPrevious.putAll(varsCurrent);
+         varsCurrent.clear();
+      }
+
+      List<Class<?>> parameterClasses = new ArrayList<>(params.length);
+      for (TypeVariable<?> tv : params) {
+         parameterClasses.add(varsPrevious.get(tv));
       }
       return parameterClasses;
+   }
+
+   public static Class<?> getClass(Type type) {
+      return resolveClass(type, Map.of());
+   }
+
+   private static Class<?> resolveClass(Type type, Map<TypeVariable<?>, Class<?>> vars) {
+      if (type instanceof Class<?> clazz) {
+         return clazz;
+      } else if (type instanceof ParameterizedType pa) {
+         return (Class<?>) pa.getRawType();
+      } else if (type instanceof GenericArrayType ga) {
+         Class<?> componentClass = resolveClass(ga.getGenericComponentType(), vars);
+         return (componentClass != null) ? Array.newInstance(componentClass, 0).getClass() : null;
+      } else if (type instanceof TypeVariable<?> tv) {
+         return vars.get(tv);
+      } else if (type instanceof WildcardType) {
+         return null;
+      } else {
+         return null;
+      }
    }
 
    /**
@@ -239,47 +259,20 @@ public class ClassHelper {
     * @return
     */
    public static <T> Type getGenericSuperType(Class<? extends T> subclass, Class<T> classWithParameter) {
-      if (subclass.getSuperclass() != null && classWithParameter.isAssignableFrom(subclass.getSuperclass())) {
+      Class<?> superclass = subclass.getSuperclass();
+      if (superclass != null && classWithParameter.isAssignableFrom(superclass)) {
          return subclass.getGenericSuperclass();
-      } else {
-          Class<?>[] interfaces = subclass.getInterfaces();
-          for (int j = 0; j < interfaces.length; j++) {
-              Class in = interfaces[j];
-              if (classWithParameter.isAssignableFrom(in)) {
-                  return subclass.getGenericInterfaces()[j];
-              }
-          }
-         return null;
       }
+
+      Class<?>[] interfaces = subclass.getInterfaces();
+      for (int i = 0; i < interfaces.length; i++) {
+         if (classWithParameter.isAssignableFrom(interfaces[i])) {
+            return subclass.getGenericInterfaces()[i];
+         }
+      }
+      return null;
    }
 
-   /**
-    * when possible return the class of the type argument, otherwise null
-    *
-    * @param type
-    * @return
-    */
-   public static Class<?> getClass(Type type) {
-      if (type instanceof Class) {
-         return (Class<?>) type;
-      } else if (type instanceof ParameterizedType) {
-         return (Class<?>) ((ParameterizedType) type).getRawType();
-      } else if (type instanceof GenericArrayType) {
-         Type componentType = ((GenericArrayType) type).getGenericComponentType();
-         Class<?> componentClass = getClass(componentType);
-         if (componentClass != null) {
-            return Array.newInstance(componentClass, 0).getClass();
-         } else {
-            return null;
-         }
-      } else if (type instanceof TypeVariable) {
-         return null;
-      } else if (type instanceof WildcardType) {
-         return null;
-      } else {
-         return null;
-      }
-   }
 
    /**
     * Calls {@link #getClasses(java.lang.ClassLoader, java.lang.String) } with the contextclassloader of the current
