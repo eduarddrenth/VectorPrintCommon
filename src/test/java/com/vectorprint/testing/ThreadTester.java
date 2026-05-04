@@ -44,70 +44,64 @@ import java.util.Set;
 public class ThreadTester {
 
    /**
-    * Runs the given Runnable in a Thread, waits for the Thread to finish and rethrows the first Exception caught during
+    * Runs the given Runnable in a Thread, waits for the Thread to finish and rethrows the first Throwable caught during
     * the threads execution.
     *
     * @param toRun The Thread or Runnable to run
-    * @throws AssertionError when a junit assertion fails in the thread
-    * @throws AssertionFailedError when an
-    * @throws RuntimeException when a RuntimeException occurred in the thread
+    * @throws Throwable when something went wrong in the thread
     */
-   public static void testInThread(Runnable toRun) throws AssertionError, RuntimeException, InterruptedException {
+   public static void testInThread(Runnable toRun) throws Throwable {
+      if (toRun == null) {
+         return;
+      }
       Runner r = new Runner(toRun);
       r.start();
       r.check();
    }
 
    /**
-    * Runs the given Runnables in a Thread, waits for the Threads to finish and rethrows the first Exception caught
-    * during the threads execution. When an Exception is caught all other threads will be interrupted.
+    * Runs the given Runnables in a Thread, waits for the Threads to finish and rethrows the first Throwable caught
+    * during the threads execution. When a Throwable is caught all other threads will be interrupted.
     *
     * @param toRun The Threads or Runnables to run
-    * @throws AssertionError when a junit assertion fails in the thread
-    * @throws AssertionFailedError when an
-    * @throws RuntimeException when a RuntimeException occurred in the thread
+    * @throws Throwable when something went wrong in one of the threads
     */
-   public static void testInThread(Collection<Runnable> toRun) throws AssertionError, RuntimeException, InterruptedException {
-      Set<Runner> runners = new HashSet<>(toRun.size());
-       // start the threads
-       toRun.stream().map((r) -> new Runner(r)).map((ru) -> {
-           ru.start();
-           return ru;
-       }).forEachOrdered((ru) -> {
-           runners.add(ru);
-       });
+   public static void testInThread(Collection<Runnable> toRun) throws Throwable {
+      int size = (toRun == null) ? 0 : toRun.size();
+      Set<Runner> runners = new HashSet<>(size);
+      if (toRun != null) {
+         for (Runnable r : toRun) {
+            Runner runner = new Runner(r);
+            runners.add(runner);
+            runner.start();
+         }
+      }
       // handle for the first failing thread
-      Runner failed = null;
+      Throwable failed = null;
       for (Runner r : runners) {
-         if (failed != null) {
-            // we've had a failure, kill the other threads
-            r.interrupt();
-         } else {
-            try {
-               // join the thread and check for failures after it has finished
-               r.check();
-            } catch (AssertionError | RuntimeException assertionError) {
-               // remember the first failing thread
-               failed = r;
+         try {
+            r.check();
+         } catch (Throwable t) {
+            if (failed == null) {
+               failed = t;
+               // interrupt remaining
+               for (Runner other : runners) {
+                  other.interrupt();
+               }
             }
-            // remember the first failing thread
-
          }
       }
       if (failed != null) {
-         // all threads finished or interrupted, a failure has been caught, rethrow the Exception now
-         failed.failIfNeeded();
+         throw failed;
       }
    }
 
    /**
-    * private class that calls the run() method of its containing Runnable in a new Thread. It captures RuntimeException
-    * and AssertionError.
+    * private class that calls the run() method of its containing Runnable in a new Thread. It captures all Throwable.
     */
    private static class Runner extends Thread {
 
-      private RuntimeException failure = null;
-      private AssertionError fail = null;
+      private Throwable failure = null;
       private final Runnable myRunnable;
 
       private Runner(Runnable toRun) {
@@ -119,33 +113,29 @@ public class ThreadTester {
       public void run() {
          try {
             myRunnable.run();
-         } catch (RuntimeException ex) {
+         } catch (Throwable ex) {
             failure = ex;
-         } catch (AssertionError ex) {
-            fail = ex;
          }
       }
 
-      private void check() throws AssertionError, RuntimeException, InterruptedException {
-         join();
-         failIfNeeded();
-      }
-
-      private void failIfNeeded() throws AssertionError, RuntimeException, InterruptedException {
+      private void check() throws Throwable {
+         try {
+            join();
+         } catch (InterruptedException e) {
+            interrupt();
+            throw e;
+         }
          if (failure != null) {
             throw failure;
-         }
-         if (fail != null) {
-            throw fail;
          }
       }
 
       @Override
       public boolean equals(Object obj) {
-         if (obj == null) {
-            return false;
+         if (obj == this) {
+            return true;
          }
-         if (getClass() != obj.getClass()) {
+         if (!(obj instanceof Runner)) {
             return false;
          }
          final Runner other = (Runner) obj;
@@ -154,7 +144,7 @@ public class ThreadTester {
 
       @Override
       public int hashCode() {
-         return 5;
+         return (int) (getId() ^ (getId() >>> 32));
       }
    }
 }

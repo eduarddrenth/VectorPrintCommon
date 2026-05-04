@@ -74,7 +74,7 @@ public class CommonTest {
    }
    
    @Test
-   public void testRunInThread() throws AssertionError, RuntimeException, InterruptedException {
+   public void testRunInThread() throws Throwable {
       Collection<Runnable> toRun = new ArrayList<>(1);
       MyRun r = new MyRun();
       MyRun r2 = new MyRun();
