@@ -181,6 +181,7 @@ public class ArrayHelper {
      * @param l
      * @return an array of type T or null when the List argument is empty
      * @throws NullPointerException when the List argument is null
+     * @throws ArrayStoreException when the list contains mixed types
      */
     public static <T> T[] toArray(List<T> l) {
         if (!l.isEmpty() && l.get(0) != null) {
