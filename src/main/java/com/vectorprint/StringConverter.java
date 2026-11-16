@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 /**
- * Turn a String into a value of another type
+ * Turn a String into an Object
  *
  * @author Eduard Drenth at VectorPrint.nl
  * @param <T>
